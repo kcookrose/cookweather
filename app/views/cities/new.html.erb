@@ -1,0 +1,81 @@
+<%require 'net/http'  %>
+<%require 'rubygems' %>
+<%require 'json' %>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+<!-- Intro Header -->
+<header class="intro">
+    <div class="intro-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h1 class="brand-heading">Weather</h1>
+                    <p class="intro-text">A super cool, super free, one page weather forecast service.
+                        <br>Created by Kathryn Cook.</p>
+                    <a href="#about" class="btn btn-circle page-scroll">
+                        <i class="fa fa-angle-double-down animated"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- About Section -->
+<section id="about" class="container content-section text-center">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h2>FORECAST</h2>
+            <p>Please enter a location in the box below (city name only please; pray there aren't duplicates). </p>
+            <p><%= form_for @new_city do |f| %></p>
+            <p><font color = "000000"><%= f.text_field :cityname %></font></p>
+            <p>Do you want your very own snazzy JSON weather forecast for the location you entered?</p>
+            <p><font color = "000000"><%= f.submit("yes I do!!!!") %></font></p>
+            <p><% end %></p>
+			<%url = URI.parse("http://api.openweathermap.org/data/2.5/weather?APPID=6338440737b7cf1ab097ba999e5ab314&q=#{@city.cityname}")%>
+            <%req = Net::HTTP::Get.new(url.to_s)%>
+			<%res = Net::HTTP.start(url.host, url.port) {|http|http.request(req)}%>
+            <% output = JSON.parse(res.body) %>
+            <% output.each do |i| %>
+                <div><p><%= i.to_s().tr('[','').tr(']','').gsub(/",/, ':').tr('"', '')%></div><p>
+            <% end %>
+        </div>
+    </div>
+</section>
+
+<!-- Download Section -->
+<section id="download" class="content-section text-center">
+    <div class="download-section">
+        <div class="container">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Forecast of your future</h2>
+                <p>bright and beautiful</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="container content-section text-center">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h2>Find Out More</h2>
+            <p>Below you can find out more about Bootstrap and Bootstrap templates.</p>
+            <ul class="list-inline banner-social-buttons">
+                <li>
+                    <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
+                </li>
+                <li>
+                    <a href="https://github.com/IronSummitMedia/startbootstrap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                </li>
+                <li>
+                    <a href="https://plus.google.com/+Startbootstrap/posts" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+</body>
+
